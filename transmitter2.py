@@ -57,34 +57,40 @@ class Shades:
         self.downCode = downCode
         self.stopCode = stopCode
         self.gpio = gpio
-        self.set('UP')
+        self.set('DOWN')
 
     def set(self, state):
-        choices = {'UP': upCode, 'DOWN': downCode, 'STOP': stopCode}
-        code = choices.get(state, stopCode)
-        print('Turning %s %s using code %i' % (self.name, state, code))
+        choices = {'UP': self.upCode, 'DOWN': self.downCode, 'STOP': self.stopCode}
+        code = choices.get(state, self.stopCode)
+        print('Turning %s %s using code %s' % (self.name, state, code))
         self.transmit_code(code)
 
     def transmit_code(self, code):
         for t in range(NUM_ATTEMPTS):
-            sendSignal(self.gpio, self.starter)
+            self.sendSignal(self.gpio, self.starter)
             time.sleep(self.time_to_first_bit_delay)
             for i in code:
                 if i == '0':
-                    sendSignal(self.gpio, self.zero)
+                    self.sendSignal(self.gpio, self.zero)
                     time.sleep(self.after_zero_delay)
                 elif i == '1':
-                    sendSignal(self.gpio, self.one)
+                    self.sendSignal(self.gpio, self.one)
                     time.sleep(self.after_one_delay)
                 else:
                     continue
         self.gpio.cleanup()
 
-    def sendSignal(gpio, length):
+    def sendSignal(self, gpio, length):
         gpio.output(TRANSMIT_PIN, 1)
         time.sleep(length)
         gpio.output(TRANSMIT_PIN, 0)        
-    
+
+def createGPIO():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+    return GPIO
+   
+ 
 if __name__ == '__main__':
-    gpio = createGPIO()    
+    gpio = createGPIO()
     Shades('study-room-shade', sr_ch1_up, sr_ch1_down, sr_ch1_stop, gpio)
