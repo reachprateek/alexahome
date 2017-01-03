@@ -3,7 +3,7 @@ import boto3
 import json
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 iotDataPlaneClient = boto3.client('iot-data')
 iotClient = boto3.client('iot')
@@ -145,6 +145,7 @@ def handleDiscovery(context, event):
 
 def handleControl(context, event):
     device_id = event['payload']['appliance']['applianceId']
+    logger.debug('Executing handle control request: on %s' % (device_id))    
     requestType = event['header']['name']
     if requestType == 'TurnOnRequest':
         name = 'TurnOnConfirmation'
@@ -154,7 +155,7 @@ def handleControl(context, event):
         shade = 'CLOSE'
     # we don't support other requestTypes yet
 
-    logger.info('Executing: %s on %s' % (shade, device_id))
+    logger.debug('Executing: %s on %s' % (shade, device_id))
 
     response = iotDataPlaneClient.update_thing_shadow(
         thingName=device_id,
@@ -167,7 +168,7 @@ def handleControl(context, event):
         })
     )
 
-    logger.info('received {}'.format(response))
+    logger.debug('received {}'.format(response))
 
     return {
         'header': {

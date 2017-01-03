@@ -89,12 +89,11 @@ class Shades:
     after_one_delay = 0.00045
     extended_delay = 0.01
 
-    def __init__(self, name, openCode, closeCode, stopCode, gpio, iot):
+    def __init__(self, name, openCode, closeCode, stopCode, iot):
         self.name = name
         self.openCode = openCode
         self.closeCode = closeCode
         self.stopCode = stopCode
-        self.gpio = gpio
 
         self.shadow = iot.createShadowHandlerWithName(self.name, True)
         self.shadow.shadowRegisterDeltaCallback(self.newShadow)
@@ -115,6 +114,8 @@ class Shades:
         ), None, 5)
 
     def transmit_code(self, code):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
         for t in range(NUM_ATTEMPTS):
             self.sendSignal(self.starter)
             time.sleep(self.time_to_first_bit_delay)
@@ -127,12 +128,12 @@ class Shades:
                     time.sleep(self.after_one_delay)
                 else:
                     continue
-        self.gpio.cleanup()
+        GPIO.cleanup()
 
     def sendSignal(self, length):
-        self.gpio.output(TRANSMIT_PIN, 1)
+        GPIO.output(TRANSMIT_PIN, 1)
         time.sleep(length)
-        self.gpio.output(TRANSMIT_PIN, 0)        
+        GPIO.output(TRANSMIT_PIN, 0)
 
     def newShadow(self, payload, responseStatus, token):
         newState = json.loads(payload)['state']['shade']
@@ -154,15 +155,11 @@ def createRF():
     rf.setPulseLength(194)
     return rf
 
-def createGPIO():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-    return GPIO    
 
 if __name__ == "__main__":
     iot = createIoT()
     rf = createRF()
-    gpio = createGPIO()
+    #gpio = createGPIO()
 
 
     # Create your switches here, using the format:
@@ -183,7 +180,7 @@ if __name__ == "__main__":
 
     #shades bedrooms
     #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, gpio, iot)
-    Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, gpio, iot)
+    Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot)
     #Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, gpio, iot)
 
     print('Listening...')
