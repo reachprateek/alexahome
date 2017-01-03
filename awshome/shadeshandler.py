@@ -32,9 +32,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Aarav room shades',
                     'friendlyDescription': 'Shades in Aaravs room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -47,9 +46,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Study room shades',
                     'friendlyDescription': 'Shades in Study room room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -62,9 +60,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Bedroom shades',
                     'friendlyDescription': 'Shades in both bedrooms controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -77,9 +74,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Family room shade 1',
                     'friendlyDescription': 'Shade 1 in family room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -92,9 +88,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Family room shade 2',
                     'friendlyDescription': 'Shade 2 in family room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -107,9 +102,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Family room shade 3',
                     'friendlyDescription': 'Shade 3 in family room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -122,9 +116,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Family room shade 4',
                     'friendlyDescription': 'Shade 4 in family room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
@@ -137,9 +130,8 @@ def handleDiscovery(context, event):
                     'friendlyName': 'Family room shades',
                     'friendlyDescription': 'All Shades in family room controlled by Raspberry Pi',
                     'actions': [
-                        'OPEN',
-                        'CLOSE',
-                        'STOP'
+                        'turnOn',
+                        'turnOff'
                     ],
                     'additionalApplianceDetails': {},
                     'isReachable': True,
