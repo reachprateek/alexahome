@@ -73,7 +73,14 @@ def sendSignal(length):
     GPIO.output(TRANSMIT_PIN, 1)
     time.sleep(length)
     GPIO.output(TRANSMIT_PIN, 0)
+
+def createGPIO():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+    return GPIO    
     
 if __name__ == '__main__':
+
+    gpio = createGPIO()
     for argument in sys.argv[1:]:
-        exec('transmit_code(' + str(argument) + ')')
+        exec('transmit_code(gpio,' + str(argument) + ')')
