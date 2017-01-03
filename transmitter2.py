@@ -48,31 +48,30 @@ shades_extended_delay = 0.01
 NUM_ATTEMPTS = 10
 TRANSMIT_PIN = 17
 
-def transmit_code(code):
+def transmit_code(gpio, code):
+    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
     '''Transmit a chosen code string using the GPIO transmitter'''
     print("Sending code ", code)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
     for t in range(NUM_ATTEMPTS):
-        sendSignal(shades_starter_code)
+        sendSignal(gpio, shades_starter_code)
         time.sleep(shades_time_to_first_bit_delay)
         for i in code:
             if i == '0':
-                sendSignal(shades_zero)
+                sendSignal(gpio, shades_zero)
                 time.sleep(shades_after_zero_delay)
             elif i == '1':
-                sendSignal(shades_one)
+                sendSignal(gpio, shades_one)
                 time.sleep(shades_after_one_delay)
             else:
                 continue
-        GPIO.output(TRANSMIT_PIN, 0)
+        gpio.output(TRANSMIT_PIN, 0)
         time.sleep(shades_extended_delay)
     GPIO.cleanup()
 
-def sendSignal(length):
-    GPIO.output(TRANSMIT_PIN, 1)
+def sendSignal(gpio, length):
+    gpio.output(TRANSMIT_PIN, 1)
     time.sleep(length)
-    GPIO.output(TRANSMIT_PIN, 0)
+    gpio.output(TRANSMIT_PIN, 0)
 
 def createGPIO():
     GPIO.setmode(GPIO.BCM)
