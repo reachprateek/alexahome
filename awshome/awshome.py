@@ -101,9 +101,9 @@ class Shades:
         self.set('OPEN')
 
     def set(self, state):
-        choices = {'OPEN': openCode, 'CLOSE': closeCode, 'STOP': stopCode}
-        code = choices.get(state, stopCode)
-        print('Turning %s %s using code %i' % (self.name, state, code))
+        choices = {'OPEN': self.openCode, 'CLOSE': self.closeCode, 'STOP': self.stopCode}
+        code = choices.get(state, self.stopCode)
+        print('Turning %s %s using code %s' % (self.name, state, code))
         self.transmit_code(code)
         self.shadow.shadowUpdate(json.dumps({
             'state': {
@@ -116,23 +116,23 @@ class Shades:
 
     def transmit_code(self, code):
         for t in range(NUM_ATTEMPTS):
-            self.sendSignal(self.gpio, self.starter)
+            self.sendSignal(self.starter)
             time.sleep(self.time_to_first_bit_delay)
             for i in code:
                 if i == '0':
-                    self.sendSignal(self.gpio, self.zero)
+                    self.sendSignal( self.zero)
                     time.sleep(self.after_zero_delay)
                 elif i == '1':
-                    self.sendSignal(self.gpio, self.one)
+                    self.sendSignal(self.one)
                     time.sleep(self.after_one_delay)
                 else:
                     continue
         self.gpio.cleanup()
 
-    def sendSignal(self, gpio, length):
-        gpio.output(TRANSMIT_PIN, 1)
+    def sendSignal(self, length):
+        self.gpio.output(TRANSMIT_PIN, 1)
         time.sleep(length)
-        gpio.output(TRANSMIT_PIN, 0)        
+        self.gpio.output(TRANSMIT_PIN, 0)        
 
     def newShadow(self, payload, responseStatus, token):
         newState = json.loads(payload)['state']['shade']
@@ -172,19 +172,19 @@ if __name__ == "__main__":
     #   OnOff('floor-lamp', 284099, 284108, rf, iot)
     #
     #lamps
-    OnOff('table-lamp', 1398067, 1398076, rf, iot)
+    #OnOff('table-lamp', 1398067, 1398076, rf, iot)
 
     #shades family-room
-    Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, gpio, iot)
-    Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, gpio, iot)
-    Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, gpio, iot)    
-    Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, gpio, iot)        
-    Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, gpio, iot)
+    #Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, gpio, iot)
+    #Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, gpio, iot)
+    #Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, gpio, iot)    
+    #Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, gpio, iot)        
+    #Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, gpio, iot)
 
     #shades bedrooms
-    Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, gpio, iot)
+    #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, gpio, iot)
     Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, gpio, iot)
-    Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, gpio, iot)
+    #Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, gpio, iot)
 
     print('Listening...')
 
