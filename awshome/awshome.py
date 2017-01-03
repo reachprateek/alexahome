@@ -172,16 +172,16 @@ if __name__ == "__main__":
     #OnOff('table-lamp', 1398067, 1398076, rf, iot)
 
     #shades family-room
-    #Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, gpio, iot)
-    #Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, gpio, iot)
-    #Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, gpio, iot)    
-    #Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, gpio, iot)        
-    #Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, gpio, iot)
+    Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, iot)
+    Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot)
+    Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot)    
+    Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot)        
+    Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot)
 
     #shades bedrooms
-    #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, gpio, iot)
+    Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, iot)
     Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot)
-    #Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, gpio, iot)
+    Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot)
 
     print('Listening...')
 
