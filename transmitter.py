@@ -18,11 +18,10 @@ fr_ch2_down = '0100100000110001111100110101001000111100'
 fr_ch2_stop = '0100100000110001111100110101001001010101'
 
 
-fr_ch3_up = '0100100000110001111100110101001100010001'
-fr_ch3_up_inv = '0100100000110001111100110101001100011110'
+fr_ch3_up = '0100100000110001111100110101001100011110'
+fr_ch3_down = '0100100000110001111100110101001100111100'
+fr_ch3_stop = '0100100000110001111100110101001101010101'
 
-fr_ch3_down = '0100100000110001111100110101001100110011'
-fr_ch3_down_inv = '0100100000110001111100110101001100111100'
 
 fr_ch4_up = '0100100000110001111100110101010000011110'
 fr_ch4_down = '0100100000110001111100110101010000110011'
@@ -38,17 +37,16 @@ ar_ch2_down = '1101000000110001001101110010001000110011'
 ar_ch2_stop = '1101000000110001001101110010001001010101'
 
 
-starter_code_delay = 0.0047
-time_to_first_bit_delay = 0.0015
-short_delay = 0.00028
-long_delay = 0.00062
-zero_to_delay = 0.0008
-one_to_delay = 0.00045
-extended_delay = 0.01
+shades_starter_code_length = 0.0047
+shades_time_to_first_bit_delay = 0.0015
+shades_zero_length = 0.00028
+shades_one_length = 0.00062
+shades_after_zero_delay = 0.0008
+shades_after_one_delay = 0.00045
+shades_extended_delay = 0.01
 
 NUM_ATTEMPTS = 10
 TRANSMIT_PIN = 17
-#TRANSMIT_PIN = 2
 
 def transmit_code(code):
     '''Transmit a chosen code string using the GPIO transmitter'''
@@ -57,24 +55,24 @@ def transmit_code(code):
     GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
     for t in range(NUM_ATTEMPTS):
         GPIO.output(TRANSMIT_PIN, 1)
-        time.sleep(starter_code_delay)
+        time.sleep(shades_starter_code_length)
         GPIO.output(TRANSMIT_PIN, 0)
-        time.sleep(time_to_first_bit_delay)
+        time.sleep(shades_time_to_first_bit_delay)
         for i in code:
             if i == '0':
                 GPIO.output(TRANSMIT_PIN, 1)
-                time.sleep(short_delay)
+                time.sleep(shades_zero_length)
                 GPIO.output(TRANSMIT_PIN, 0)
-                time.sleep(zero_to_delay)
+                time.sleep(shades_after_zero_delay)
             elif i == '1':
                 GPIO.output(TRANSMIT_PIN, 1)
-                time.sleep(long_delay)
+                time.sleep(shades_one_length)
                 GPIO.output(TRANSMIT_PIN, 0)
-                time.sleep(one_to_delay)
+                time.sleep(shades_after_one_delay)
             else:
                 continue
         GPIO.output(TRANSMIT_PIN, 0)
-        time.sleep(extended_delay)
+        time.sleep(shades_extended_delay)
     GPIO.cleanup()
 
 if __name__ == '__main__':
