@@ -37,49 +37,54 @@ ar_ch2_down = '1101000000110001001101110010001000110011'
 ar_ch2_stop = '1101000000110001001101110010001001010101'
 
 
-shades_starter_code = 0.0047
-shades_time_to_first_bit_delay = 0.0015
-shades_zero = 0.00028
-shades_one = 0.00062
-shades_after_zero_delay = 0.0008
-shades_after_one_delay = 0.00045
-shades_extended_delay = 0.01
-
 NUM_ATTEMPTS = 10
 TRANSMIT_PIN = 17
 
-def transmit_code(gpio, code):
-    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-    '''Transmit a chosen code string using the GPIO transmitter'''
-    print("Sending code ", code)
-    for t in range(NUM_ATTEMPTS):
-        sendSignal(gpio, shades_starter_code)
-        time.sleep(shades_time_to_first_bit_delay)
-        for i in code:
-            if i == '0':
-                sendSignal(gpio, shades_zero)
-                time.sleep(shades_after_zero_delay)
-            elif i == '1':
-                sendSignal(gpio, shades_one)
-                time.sleep(shades_after_one_delay)
-            else:
-                continue
-        gpio.output(TRANSMIT_PIN, 0)
-        time.sleep(shades_extended_delay)
-    GPIO.cleanup()
 
-def sendSignal(gpio, length):
-    gpio.output(TRANSMIT_PIN, 1)
-    time.sleep(length)
-    gpio.output(TRANSMIT_PIN, 0)
+class Shades:
 
-def createGPIO():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-    return GPIO    
+    starter = 0.0047
+    time_to_first_bit_delay = 0.0015
+    zero = 0.00028
+    one = 0.00062
+    after_zero_delay = 0.0008
+    after_one_delay = 0.00045
+    extended_delay = 0.01
+
+    def __init__(self, name, upCode, downCode, stopCode, gpio):
+        self.name = name
+        self.upCode = upCode
+        self.downCode = downCode
+        self.stopCode = stopCode
+        self.gpio = gpio
+        self.set('UP')
+
+    def set(self, state):
+        choices = {'UP': upCode, 'DOWN': downCode, 'STOP': stopCode}
+        code = choices.get(state, stopCode)
+        print('Turning %s %s using code %i' % (self.name, state, code))
+        self.transmit_code(code)
+
+    def transmit_code(self, code):
+        for t in range(NUM_ATTEMPTS):
+            sendSignal(self.gpio, self.starter)
+            time.sleep(self.time_to_first_bit_delay)
+            for i in code:
+                if i == '0':
+                    sendSignal(self.gpio, self.zero)
+                    time.sleep(self.after_zero_delay)
+                elif i == '1':
+                    sendSignal(self.gpio, self.one)
+                    time.sleep(self.after_one_delay)
+                else:
+                    continue
+        self.gpio.cleanup()
+
+    def sendSignal(gpio, length):
+        gpio.output(TRANSMIT_PIN, 1)
+        time.sleep(length)
+        gpio.output(TRANSMIT_PIN, 0)        
     
 if __name__ == '__main__':
-
-    gpio = createGPIO()
-    for argument in sys.argv[1:]:
-        exec('transmit_code(gpio,' + str(argument) + ')')
+    gpio = createGPIO()    
+    Shades('study-room-shade', sr_ch1_up, sr_ch1_down, sr_ch1_stop, gpio)
