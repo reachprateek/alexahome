@@ -129,6 +129,9 @@ class Shades:
                     time.sleep(self.after_one_delay)
                 else:
                     continue
+            GPIO.output(TRANSMIT_PIN, 0)
+            time.sleep(shades_extended_delay)
+
 
     def sendSignal(self, length):
         GPIO.output(TRANSMIT_PIN, 1)
