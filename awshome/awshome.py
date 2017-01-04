@@ -156,9 +156,10 @@ def createRF():
     return rf
 
 if __name__ == "__main__":
-    iot = createIoT()
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+    try:
+        iot = createIoT()
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
 
     #rf = createRF()
 
@@ -173,20 +174,27 @@ if __name__ == "__main__":
 
     #shades family-room
     #Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, iot).set('OPEN')
-    Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot).set('OPEN')
-    Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot).set('OPEN')    
-    Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot).set('OPEN')        
-    Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot).set('OPEN')
+        Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot).set('OPEN')
+        Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot).set('OPEN')    
+        Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot).set('OPEN')        
+        Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot).set('OPEN')
 
     #shades bedrooms
     #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, iot).set('OPEN')
-    Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot).set('OPEN')
-    Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot).set('OPEN')
+        Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot).set('OPEN')
+        Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot).set('OPEN')
 
-    print('Listening...')
+        print('Listening...')
 
-    while True:
-        time.sleep(0.2)
+        while True:
+            time.sleep(0.2)
+    
+    except KeyboardInterrupt:
+        print ('program interrupted will execute finally')
 
-    GPIO.cleanup()
+    except:
+        print ('Error or exception has occured will execute finally')
+
+    finally:
+        GPIO.cleanup()
         
