@@ -149,10 +149,10 @@ def handleControl(context, event):
     requestType = event['header']['name']
     if requestType == 'TurnOnRequest':
         name = 'TurnOnConfirmation'
-        shade = 'CLOSE'
+        shade = 'ON'
     elif requestType == 'TurnOffRequest':
         name = 'TurnOffConfirmation'
-        shade = 'OPEN'
+        shade = 'OFF'
     # we don't support other requestTypes yet
 
     logger.debug('Executing: %s on %s' % (shade, device_id))

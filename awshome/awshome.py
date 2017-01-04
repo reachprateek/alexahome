@@ -15,43 +15,43 @@ GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
 
 
 #family room shades
-fr_ch0_open = '0100100000110001111100110101000000011110'
-fr_ch0_close = '0100100000110001111100110101000000111100'
+fr_ch0_off = '0100100000110001111100110101000000011110'
+fr_ch0_on = '0100100000110001111100110101000000111100'
 fr_ch0_stop = '0100100000110001111100110101000001010101'
 
 
-fr_ch1_open = '0100100000110001111100110101000100011110'
-fr_ch1_close = '0100100000110001111100110101000100111100'
+fr_ch1_off = '0100100000110001111100110101000100011110'
+fr_ch1_on = '0100100000110001111100110101000100111100'
 fr_ch1_stop = '0100100000110001111100110101000101010101'
 
 
-fr_ch2_open = '0100100000110001111100110101001000011110'
-fr_ch2_close = '0100100000110001111100110101001000111100'
+fr_ch2_off = '0100100000110001111100110101001000011110'
+fr_ch2_on = '0100100000110001111100110101001000111100'
 fr_ch2_stop = '0100100000110001111100110101001001010101'
 
 
-fr_ch3_open = '0100100000110001111100110101001100011110'
-fr_ch3_close = '0100100000110001111100110101001100111100'
+fr_ch3_off = '0100100000110001111100110101001100011110'
+fr_ch3_on = '0100100000110001111100110101001100111100'
 fr_ch3_stop = '0100100000110001111100110101001101010101'
 
 
-fr_ch4_open = '0100100000110001111100110101010000011110'
-fr_ch4_close = '0100100000110001111100110101010000110011'
+fr_ch4_off = '0100100000110001111100110101010000011110'
+fr_ch4_on = '0100100000110001111100110101010000110011'
 fr_ch4_stop = '0100100000110001111100110101010001010101'
 
 #bedrooms
-br_ch0_open = '1101000000110001001101110010000000010001'
-br_ch0_close = '1101000000110001001101110010000000110011'
+br_ch0_off = '1101000000110001001101110010000000010001'
+br_ch0_on = '1101000000110001001101110010000000110011'
 br_ch0_stop = '1101000000110001001101110010000001010101'
 
 #study room shade
-sr_ch1_open = '1101000000110001001101110010000100010001'
-sr_ch1_close = '1101000000110001001101110010000100110011'
+sr_ch1_off = '1101000000110001001101110010000100010001'
+sr_ch1_on = '1101000000110001001101110010000100110011'
 sr_ch1_stop = '1101000000110001001101110010000101010101'
 
 #aarav room shade
-ar_ch2_open = '1101000000110001001101110010001000010001'
-ar_ch2_close = '1101000000110001001101110010001000110011'
+ar_ch2_off = '1101000000110001001101110010001000010001'
+ar_ch2_on = '1101000000110001001101110010001000110011'
 ar_ch2_stop = '1101000000110001001101110010001001010101'
 
 
@@ -93,17 +93,17 @@ class Shades:
     after_one_delay = 0.00045
     extended_delay = 0.01
 
-    def __init__(self, name, openCode, closeCode, stopCode, iot):
+    def __init__(self, name, offCode, onCode, stopCode, iot):
         self.name = name
-        self.openCode = openCode
-        self.closeCode = closeCode
+        self.offCode = offCode
+        self.onCode = onCode
         self.stopCode = stopCode
 
         self.shadow = iot.createShadowHandlerWithName(self.name, True)
         self.shadow.shadowRegisterDeltaCallback(self.newShadow)
 
     def set(self, state):
-        choices = {'OPEN': self.openCode, 'CLOSE': self.closeCode, 'STOP': self.stopCode}
+        choices = {'OFF': self.offCode, 'ON': self.onCode, 'STOP': self.stopCode}
         code = choices.get(state, self.stopCode)
         print('Turning %s %s using code %s' % (self.name, state, code))
         self.transmit_code(code)
@@ -158,9 +158,6 @@ def createRF():
 if __name__ == "__main__":
     try:
         iot = createIoT()
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-
     #rf = createRF()
 
     # Create your switches here, using the format:
@@ -173,16 +170,16 @@ if __name__ == "__main__":
     #OnOff('table-lamp', 1398067, 1398076, rf, iot)
 
     #shades family-room
-    #Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, iot).set('OPEN')
-        Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot).set('OPEN')
-        Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot).set('OPEN')    
-        Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot).set('OPEN')        
-        Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot).set('OPEN')
+    #Shades('family-room-shades', fr_ch0_off, fr_ch0_on, fr_ch0_stop, iot).set('OFF')
+        Shades('family-room-shade1', fr_ch1_off, fr_ch1_on, fr_ch1_stop, iot).set('OFF')
+        Shades('family-room-shade2', fr_ch2_off, fr_ch2_on, fr_ch2_stop, iot).set('OFF')    
+        Shades('family-room-shade3', fr_ch3_off, fr_ch3_on, fr_ch3_stop, iot).set('OFF')        
+        Shades('family-room-shade4', fr_ch4_off, fr_ch4_on, fr_ch4_stop, iot).set('OFF')
 
     #shades bedrooms
-    #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, iot).set('OPEN')
-        Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot).set('OPEN')
-        Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot).set('OPEN')
+    #Shades('bedroom-shades', br_ch0_off, br_ch0_on, br_ch0_stop, iot).set('OFF')
+        Shades('study-room-shade', sr_ch1_off, sr_ch1_on, sr_ch1_stop, iot).set('OFF')
+        Shades('aarav-room-shade', ar_ch2_off, ar_ch2_on, ar_ch2_stop, iot).set('OFF')
 
         print('Listening...')
 
