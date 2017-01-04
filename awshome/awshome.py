@@ -97,7 +97,6 @@ class Shades:
 
         self.shadow = iot.createShadowHandlerWithName(self.name, True)
         self.shadow.shadowRegisterDeltaCallback(self.newShadow)
-        self.set('OPEN')
 
     def set(self, state):
         choices = {'OPEN': self.openCode, 'CLOSE': self.closeCode, 'STOP': self.stopCode}
@@ -114,8 +113,6 @@ class Shades:
         ), None, 5)
 
     def transmit_code(self, code):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
         for t in range(NUM_ATTEMPTS):
             self.sendSignal(self.starter)
             time.sleep(self.time_to_first_bit_delay)
@@ -128,7 +125,6 @@ class Shades:
                     time.sleep(self.after_one_delay)
                 else:
                     continue
-        GPIO.cleanup()
 
     def sendSignal(self, length):
         GPIO.output(TRANSMIT_PIN, 1)
@@ -155,12 +151,15 @@ def createRF():
     rf.setPulseLength(194)
     return rf
 
+def initGPIO():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+
 
 if __name__ == "__main__":
     iot = createIoT()
     rf = createRF()
-    #gpio = createGPIO()
-
+    initGPIO()
 
     # Create your switches here, using the format:
     #   OnOff(<THING NAME>, <ON CODE>, <OFF CODE>, rf, iot)
@@ -172,18 +171,21 @@ if __name__ == "__main__":
     #OnOff('table-lamp', 1398067, 1398076, rf, iot)
 
     #shades family-room
-    Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, iot)
-    Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot)
-    Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot)    
-    Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot)        
-    Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot)
+    #Shades('family-room-shades', fr_ch0_open, fr_ch0_close, fr_ch0_stop, iot).set('OPEN')
+    Shades('family-room-shade1', fr_ch1_open, fr_ch1_close, fr_ch1_stop, iot).set('OPEN')
+    Shades('family-room-shade2', fr_ch2_open, fr_ch2_close, fr_ch2_stop, iot).set('OPEN')    
+    Shades('family-room-shade3', fr_ch3_open, fr_ch3_close, fr_ch3_stop, iot).set('OPEN')        
+    Shades('family-room-shade4', fr_ch4_open, fr_ch4_close, fr_ch4_stop, iot).set('OPEN')
 
     #shades bedrooms
-    Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, iot)
-    Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot)
-    Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot)
+    #Shades('bedroom-shades', br_ch0_open, br_ch0_close, br_ch0_stop, iot).set('OPEN')
+    Shades('study-room-shade', sr_ch1_open, sr_ch1_close, sr_ch1_stop, iot).set('OPEN')
+    Shades('aarav-room-shade', ar_ch2_open, ar_ch2_close, ar_ch2_stop, iot).set('OPEN')
 
     print('Listening...')
 
     while True:
         time.sleep(0.2)
+
+    GPIO.cleanup()
+        
