@@ -10,6 +10,10 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 NUM_ATTEMPTS = 10
 TRANSMIT_PIN = 17
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+
+
 #family room shades
 fr_ch0_open = '0100100000110001111100110101000000011110'
 fr_ch0_close = '0100100000110001111100110101000000111100'
@@ -151,15 +155,12 @@ def createRF():
     rf.setPulseLength(194)
     return rf
 
-def initGPIO():
+if __name__ == "__main__":
+    iot = createIoT()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
 
-
-if __name__ == "__main__":
-    iot = createIoT()
-    rf = createRF()
-    initGPIO()
+    #rf = createRF()
 
     # Create your switches here, using the format:
     #   OnOff(<THING NAME>, <ON CODE>, <OFF CODE>, rf, iot)
