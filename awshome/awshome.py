@@ -106,7 +106,7 @@ class Shades:
         choices = {'OFF': self.offCode, 'ON': self.onCode, 'STOP': self.stopCode}
         code = choices.get(state, self.stopCode)
         print('Turning %s %s using code %s' % (self.name, state, code))
-        self.transmit_code(code)
+        transmit_code(self, code)
         self.shadow.shadowUpdate(json.dumps({
             'state': {
                 'reported': {
@@ -120,28 +120,27 @@ class Shades:
         newState = json.loads(payload)['state']['shade']
         self.set(newState)
 
-
-def transmit_code(self, code):
+def transmit_code(shade, code):
     for t in range(NUM_ATTEMPTS):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-        self.sendSignal(self.starter)
-        time.sleep(self.time_to_first_bit_delay)
+        sendSignal(shade.starter)
+        time.sleep(shade.time_to_first_bit_delay)
         for i in code:
             if i == '0':
-                self.sendSignal( self.zero)
-                time.sleep(self.after_zero_delay)
+                sendSignal(shade.zero)
+                time.sleep(shade.after_zero_delay)
             elif i == '1':
-                self.sendSignal(self.one)
-                time.sleep(self.after_one_delay)
+                sendSignal(shade.one)
+                time.sleep(shade.after_one_delay)
             else:
                 continue
             #GPIO.output(TRANSMIT_PIN, 0)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-        time.sleep(self.extended_delay)
+        time.sleep(shade.extended_delay)
 
-def sendSignal(self, length):
+def sendSignal(length):
     GPIO.output(TRANSMIT_PIN, 1)
     time.sleep(length)
     GPIO.output(TRANSMIT_PIN, 0)
