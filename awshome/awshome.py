@@ -9,6 +9,13 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 
 NUM_ATTEMPTS = 9
 TRANSMIT_PIN = 17
+starter = 0.0047
+time_to_first_bit_delay = 0.0015
+zero = 0.00028
+one = 0.00062
+after_zero_delay = 0.0008
+after_one_delay = 0.00045
+extended_delay = 0.015
 
 #family room shades
 fr_ch0_off = '0100100000110001111100110101000000011110'
@@ -81,14 +88,6 @@ class OnOff:
 '''
 class Shades:
 
-    starter = 0.0047
-    time_to_first_bit_delay = 0.0015
-    zero = 0.00028
-    one = 0.00062
-    after_zero_delay = 0.0008
-    after_one_delay = 0.00045
-    extended_delay = 0.015
-
     def __init__(self, name, offCode, onCode, stopCode, iot):
         self.name = name
         self.offCode = offCode
@@ -97,13 +96,12 @@ class Shades:
 
         self.shadow = iot.createShadowHandlerWithName(self.name, True)
         self.shadow.shadowRegisterDeltaCallback(self.newShadow)
-        #self.set('OFF')
 
     def set(self, state):
         choices = {'OFF': self.offCode, 'ON': self.onCode, 'STOP': self.stopCode}
         code = choices.get(state, self.stopCode)
         print('Turning %s %s using code %s' % (self.name, state, code))
-        transmit_code(self, code)
+        transmit_code(code)
         self.shadow.shadowUpdate(json.dumps({
             'state': {
                 'reported': {
@@ -117,24 +115,24 @@ class Shades:
         newState = json.loads(payload)['state']['shade']
         self.set(newState)
 
-def transmit_code(shade, code):
+def transmit_code(code):
     for t in range(NUM_ATTEMPTS):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-        sendSignal(shade.starter)
-        time.sleep(shade.time_to_first_bit_delay)
+        sendSignal(starter)
+        time.sleep(time_to_first_bit_delay)
         for i in code:
             if i == '0':
-                sendSignal(shade.zero)
-                time.sleep(shade.after_zero_delay)
+                sendSignal(zero)
+                time.sleep(after_zero_delay)
             elif i == '1':
-                sendSignal(shade.one)
-                time.sleep(shade.after_one_delay)
+                sendSignal(one)
+                time.sleep(after_one_delay)
             else:
                 continue
         GPIO.output(TRANSMIT_PIN, 0)
         GPIO.cleanup()
-        time.sleep(shade.extended_delay)
+        time.sleep(extended_delay)
 
 def sendSignal(length):
     GPIO.output(TRANSMIT_PIN, 1)
