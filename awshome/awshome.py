@@ -7,7 +7,7 @@ import pi_switch
 import RPi.GPIO as GPIO
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 
-NUM_ATTEMPTS = 10
+NUM_ATTEMPTS = 9
 TRANSMIT_PIN = 17
 
 #family room shades
@@ -50,7 +50,7 @@ ar_ch2_off = '1101000000110001001101110010001000010001'
 ar_ch2_on = '1101000000110001001101110010001000110011'
 ar_ch2_stop = '1101000000110001001101110010001001010101'
 
-
+'''
 class OnOff:
     def __init__(self, name, onCode, offCode, rf, iot):
         self.name = name
@@ -78,7 +78,7 @@ class OnOff:
     def newShadow(self, payload, responseStatus, token):
         newState = json.loads(payload)['state']['light']
         self.set(newState)
-
+'''
 class Shades:
 
     starter = 0.0047
@@ -97,6 +97,7 @@ class Shades:
 
         self.shadow = iot.createShadowHandlerWithName(self.name, True)
         self.shadow.shadowRegisterDeltaCallback(self.newShadow)
+        #self.set('OFF')
 
     def set(self, state):
         choices = {'OFF': self.offCode, 'ON': self.onCode, 'STOP': self.stopCode}
