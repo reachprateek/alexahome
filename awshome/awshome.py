@@ -116,31 +116,35 @@ class Shades:
             }
         ), None, 5)
 
-    def transmit_code(self, code):
-        for t in range(NUM_ATTEMPTS):
-            self.sendSignal(self.starter)
-            time.sleep(self.time_to_first_bit_delay)
-            for i in code:
-                if i == '0':
-                    self.sendSignal( self.zero)
-                    time.sleep(self.after_zero_delay)
-                elif i == '1':
-                    self.sendSignal(self.one)
-                    time.sleep(self.after_one_delay)
-                else:
-                    continue
-            GPIO.output(TRANSMIT_PIN, 0)
-            time.sleep(self.extended_delay)
-
-    def sendSignal(self, length):
-        GPIO.output(TRANSMIT_PIN, 1)
-        time.sleep(length)
-        GPIO.output(TRANSMIT_PIN, 0)
-
     def newShadow(self, payload, responseStatus, token):
         newState = json.loads(payload)['state']['shade']
         self.set(newState)
 
+
+def transmit_code(self, code):
+    for t in range(NUM_ATTEMPTS):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+        self.sendSignal(self.starter)
+        time.sleep(self.time_to_first_bit_delay)
+        for i in code:
+            if i == '0':
+                self.sendSignal( self.zero)
+                time.sleep(self.after_zero_delay)
+            elif i == '1':
+                self.sendSignal(self.one)
+                time.sleep(self.after_one_delay)
+            else:
+                continue
+            #GPIO.output(TRANSMIT_PIN, 0)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+        time.sleep(self.extended_delay)
+
+def sendSignal(self, length):
+    GPIO.output(TRANSMIT_PIN, 1)
+    time.sleep(length)
+    GPIO.output(TRANSMIT_PIN, 0)
 
 def createIoT():
     iot = AWSIoTMQTTShadowClient('AWSHome', useWebsocket=True)
