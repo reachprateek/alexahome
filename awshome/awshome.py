@@ -10,10 +10,6 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 NUM_ATTEMPTS = 10
 TRANSMIT_PIN = 17
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
-
-
 #family room shades
 fr_ch0_off = '0100100000110001111100110101000000011110'
 fr_ch0_on = '0100100000110001111100110101000000111100'
@@ -91,7 +87,7 @@ class Shades:
     one = 0.00062
     after_zero_delay = 0.0008
     after_one_delay = 0.00045
-    extended_delay = 0.01
+    extended_delay = 0.015
 
     def __init__(self, name, offCode, onCode, stopCode, iot):
         self.name = name
@@ -135,9 +131,8 @@ def transmit_code(shade, code):
                 time.sleep(shade.after_one_delay)
             else:
                 continue
-            #GPIO.output(TRANSMIT_PIN, 0)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+        GPIO.output(TRANSMIT_PIN, 0)
+        GPIO.cleanup()
         time.sleep(shade.extended_delay)
 
 def sendSignal(length):
@@ -176,15 +171,15 @@ if __name__ == "__main__":
 
     #shades family-room
     #Shades('family-room-shades', fr_ch0_off, fr_ch0_on, fr_ch0_stop, iot).set('OFF')
-        Shades('family-room-shade1', fr_ch1_off, fr_ch1_on, fr_ch1_stop, iot).set('OFF')
-        Shades('family-room-shade2', fr_ch2_off, fr_ch2_on, fr_ch2_stop, iot).set('OFF')    
-        Shades('family-room-shade3', fr_ch3_off, fr_ch3_on, fr_ch3_stop, iot).set('OFF')        
-        Shades('family-room-shade4', fr_ch4_off, fr_ch4_on, fr_ch4_stop, iot).set('OFF')
+        #Shades('family-room-shade1', fr_ch1_off, fr_ch1_on, fr_ch1_stop, iot).set('OFF')
+        #Shades('family-room-shade2', fr_ch2_off, fr_ch2_on, fr_ch2_stop, iot).set('OFF')    
+        #Shades('family-room-shade3', fr_ch3_off, fr_ch3_on, fr_ch3_stop, iot).set('OFF')        
+        #Shades('family-room-shade4', fr_ch4_off, fr_ch4_on, fr_ch4_stop, iot).set('OFF')
 
     #shades bedrooms
     #Shades('bedroom-shades', br_ch0_off, br_ch0_on, br_ch0_stop, iot).set('OFF')
         Shades('study-room-shade', sr_ch1_off, sr_ch1_on, sr_ch1_stop, iot).set('OFF')
-        Shades('aarav-room-shade', ar_ch2_off, ar_ch2_on, ar_ch2_stop, iot).set('OFF')
+        #Shades('aarav-room-shade', ar_ch2_off, ar_ch2_on, ar_ch2_stop, iot).set('OFF')
 
         print('Listening...')
 
