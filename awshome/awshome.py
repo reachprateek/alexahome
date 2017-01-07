@@ -17,6 +17,10 @@ after_zero_delay = 0.0008
 after_one_delay = 0.00045
 extended_delay = 0.015
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
+
+
 #family room shades
 fr_ch0_off = '0100100000110001111100110101000000011110'
 fr_ch0_on = '0100100000110001111100110101000000111100'
@@ -117,8 +121,6 @@ class Shades:
 
 def transmit_code(code):
     for t in range(NUM_ATTEMPTS):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(TRANSMIT_PIN, GPIO.OUT)
         sendSignal(starter)
         time.sleep(time_to_first_bit_delay)
         for i in code:
@@ -131,7 +133,6 @@ def transmit_code(code):
             else:
                 continue
         GPIO.output(TRANSMIT_PIN, 0)
-        GPIO.cleanup()
         time.sleep(extended_delay)
 
 def sendSignal(length):
